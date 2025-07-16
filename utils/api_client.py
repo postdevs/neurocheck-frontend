@@ -1,6 +1,6 @@
 import requests
 
-# API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = "http://localhost:8000"
 
 def call_eeg_api(uploaded_file):
     """Send EEG file to backend FastAPI for prediction."""
