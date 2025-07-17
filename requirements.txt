@@ -6,3 +6,7 @@ plotly==5.15.0
 
 # API communication
 requests==2.31.0
+setuptools==68.0.0
+
+## Build tools (safe on Python 3.10+)
+#setuptools==68.0.0
