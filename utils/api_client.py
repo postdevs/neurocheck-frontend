@@ -3,13 +3,12 @@ This module provides a utility function to send EEG data files to a FastAPI back
 for fatigue prediction. It attempts to contact the `/predict/eeg` endpoint and returns
 the JSON response. If the backend is unavailable, it returns a mock response for demo purposes.
 """
-import os
 import requests
 
 
 # Default backend URL (can override with ENV variable)
-
-API_BASE_URL = os.getenv("GCP_URL")
+import streamlit as st
+API_BASE_URL = st.secrets["GCP_URL"]
 
 def check_backend_health():
     """Ping backend/health endpoint."""
