@@ -9,13 +9,12 @@ import requests
 
 # Default backend URL (can override with ENV variable)
 
-#API_BASE_URL = os.getenv(GCP_URL, "http://localhost:8000")
-GCP_URL=GCP_URL
+API_BASE_URL = os.getenv("GCP_URL")
 
 def check_backend_health():
     """Ping backend/health endpoint."""
     try:
-        resp = requests.get(f"{GCP_URL}/health", timeout=3)
+        resp = requests.get(f"{API_BASE_URL}/health", timeout=3)
         if resp.status_code == 200:
             return resp.json()
         else:
@@ -70,7 +69,7 @@ def call_eeg_api(uploaded_file, timeout: int = 120):
 
     try:
         # Send to backend prediction endpoint
-        response = requests.post(f"{GCP_URL}/predict/eeg", files=files, timeout=timeout)
+        response = requests.post(f"{API_BASE_URL}/predict/eeg", files=files, timeout=timeout)
         response.raise_for_status() # Raise HTTP failures
         return response.json()      # Return JSON response from API
 
