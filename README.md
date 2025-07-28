@@ -31,7 +31,6 @@
 - `requests==2.31.0`
 
 
-<b><i>Currently deployed on Railway platform</i></b>
 
 ---
 
