@@ -156,7 +156,7 @@ with tab1:
                 st.error("❌ Could not get prediction.")
 
         with col2:
-            st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Brain_wave_chart.svg/600px-Brain_wave_chart.svg.png", caption="EEG Signal", use_column_width=True)
+            st.image("https://upload.wikimedia.org/wikipedia/commons/6/6c/EEG_Brainwaves.svg", caption="EEG Signal", use_column_width=True)
 
     col3, col4 = st.columns(2)
     with col3:
@@ -216,3 +216,11 @@ with tab2:
                     use_column_width=True
                 )
 st.markdown("</div>", unsafe_allow_html=True)
+
+
+st.markdown("""
+<hr style="margin-top: 2rem; margin-bottom: 1rem;">
+<div style="text-align: center; color: gray; font-size: 0.9rem;">
+    © 2025 NeuroCheck • Developed by Chloe Dennis
+</div>
+""", unsafe_allow_html=True)
