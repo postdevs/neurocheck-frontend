@@ -116,41 +116,29 @@ with tab1:
 
     col1, col2 = st.columns([2, 3])
     with col1:
-        # Display EEG upload instructions to user
         st.markdown("""
-        <div style='background-color: #f0f4f8; border: 2px dashed #205375; border-radius: 10px; padding: 1.5rem; text-align: center;'>
-            <h4 style='color:#205375; margin-bottom: 1rem;'>📂 Upload your EEG</h4>
-    """, unsafe_allow_html=True)
-        #hide upload
+            <div style='background-color: #f0f4f8; border: 2px dashed #205375; border-radius: 10px; padding: 1.5rem; text-align: center;'>
+                <h4 style='color:#205375; margin-bottom: 1rem;'>📂 Upload your EEG</h4>
+        """, unsafe_allow_html=True)
+
+        # Place uploader *inside* styled div with label hidden
         uploaded_eeg_file = st.file_uploader(label="", type=["csv"], label_visibility="collapsed")
 
         st.markdown("</div>", unsafe_allow_html=True)
 
         if uploaded_eeg_file:
-            # Display user EEG file upload status
             st.success(f"✅ File uploaded: {uploaded_eeg_file.name}")
 
-            # Display EEG file processing status
             with st.spinner("Analyzing EEG data..."):
                 result = call_eeg_api(uploaded_eeg_file)
 
-            # If backend offline, warn but still provide user with fake response
             if result.get("backend_status") == "offline":
                 st.warning("⚠️ Backend is offline, showing demo prediction instead.")
 
-            # Display prediction result
             if "fatigue_class" in result:
-                # Convert numeric string to readable label
                 fatigue_labels = {"0": "Not Fatigued", "1": "Fatigued"}
                 display_result = fatigue_labels.get(result['fatigue_class'], result['fatigue_class'])
 
-                #wraps prediction in styled card
-               # st.markdown(f"""
-                #    <div class='result-card'>
-               #         <h3>Prediction: {display_result}</h3>
-               #         <p>Confidence Level: {result['confidence']:.2f}</p>
-                #    </div>
-               # """, unsafe_allow_html=True)
                 st.markdown(f"""
                     <div class='result-card' style='text-align:center;'>
                         <div style='font-size: 1.2rem; font-weight: 600;'>Fatigue Score</div>
@@ -158,10 +146,6 @@ with tab1:
                         <div style='font-size: 1.2rem; margin-top: 0.5rem;'>Prediction: {display_result}</div>
                     </div>
                 """, unsafe_allow_html=True)
-
-                st.success(f"Prediction: **{display_result}**")
-                if "confidence" in result:
-                    st.write(f"Confidence Level: {result['confidence']:.2f}")
             else:
                 st.error("❌ Could not get prediction.")
 
