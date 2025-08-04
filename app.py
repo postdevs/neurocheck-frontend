@@ -114,7 +114,7 @@ with tab1:
 
     # Display EEG upload instructions to user
     uploaded_eeg_file = st.file_uploader("📂 Upload an EEG", type=["csv"])
-    col1, col2 = st.columns([2, 2])
+    col1, col2 = st.columns([2, 3])
     with col1:
         if uploaded_eeg_file:
             # Display user EEG file upload status
@@ -221,6 +221,6 @@ st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("""
 <hr style="margin-top: 2rem; margin-bottom: 1rem;">
 <div style="text-align: center; color: gray; font-size: 0.9rem;">
-    © 2025 NeuroCheck • Developed by Chloe Dennis
+    © 2025 NeuroCheck • Developed by Neurocheck
 </div>
 """, unsafe_allow_html=True)
