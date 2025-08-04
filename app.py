@@ -6,6 +6,8 @@ After upload, each module sends data to a shared backend and displays model pred
 import streamlit as st
 from utils.api_client import call_eeg_api, call_mri_api
 from PIL import Image
+import matplotlib.pyplot as plt
+import pandas as pd
 # import io  # Uncomment later if sending image bytes to backend
 
 #streamlit set up
@@ -112,13 +114,21 @@ tab1, tab2 = st.tabs(["EEG Fatigue Detector", "Alzheimer MRI Classifier"])
 with tab1:
     st.subheader("EEG Fatigue Detector")
 
-    # Display EEG upload instructions to user
-    uploaded_eeg_file = st.file_uploader("📂 Upload an EEG", type=["csv"])
     col1, col2 = st.columns([2, 3])
+
     with col1:
+        # Display EEG upload instructions to user
+        st.markdown("""
+            <div style='background-color: #f0f4f8; border: 2px dashed #205375; border-radius: 10px; padding: 1.5rem; text-align: center;'>
+                <h4 style='color:#205375;'>📂 Upload your EEG</h4>
+                <p>Accepted format: .csv | Max: 200MB</p>
+            </div>
+        """, unsafe_allow_html=True)
+        uploaded_eeg_file = st.file_uploader("", type=["csv"])
+
         if uploaded_eeg_file:
             # Display user EEG file upload status
-            st.write(f"✅ File uploaded: {uploaded_eeg_file.name}")
+            st.success(f"✅ File uploaded: {uploaded_eeg_file.name}")
 
             # Display EEG file processing status
             with st.spinner("Analyzing EEG data..."):
@@ -135,12 +145,6 @@ with tab1:
                 display_result = fatigue_labels.get(result['fatigue_class'], result['fatigue_class'])
 
                 #wraps prediction in styled card
-               # st.markdown(f"""
-                #    <div class='result-card'>
-               #         <h3>Prediction: {display_result}</h3>
-               #         <p>Confidence Level: {result['confidence']:.2f}</p>
-                #    </div>
-               # """, unsafe_allow_html=True)
                 st.markdown(f"""
                     <div class='result-card' style='text-align:center;'>
                         <div style='font-size: 1.2rem; font-weight: 600;'>Fatigue Score</div>
@@ -155,9 +159,31 @@ with tab1:
             else:
                 st.error("❌ Could not get prediction.")
 
-        with col2:
+    with col2:
+        # Display EEG Signal using matplotlib (dynamic waveform)
+        if uploaded_eeg_file:
+            try:
+                df = pd.read_csv(uploaded_eeg_file)
+
+                # Auto-detect time + first few channels
+                time_col = df.columns[0]
+                signal_cols = df.columns[1:6]  # Show first 5 channels
+
+                fig, ax = plt.subplots(figsize=(6, 4))
+                for col in signal_cols:
+                    ax.plot(df[time_col], df[col], label=col)
+                ax.set_title("EEG Signal")
+                ax.set_xlabel("Time")
+                ax.set_ylabel("Amplitude")
+                ax.legend(loc="upper right")
+                st.pyplot(fig)
+            except Exception as e:
+                st.warning(f"Could not plot EEG dynamically. Showing fallback image.\n\nDetails: {e}")
+                st.image("https://upload.wikimedia.org/wikipedia/commons/6/6c/EEG_Brainwaves.svg", caption="EEG Signal", use_column_width=True)
+        else:
             st.image("https://upload.wikimedia.org/wikipedia/commons/6/6c/EEG_Brainwaves.svg", caption="EEG Signal", use_column_width=True)
 
+    # Footer buttons
     col3, col4 = st.columns(2)
     with col3:
         st.link_button("Explanation", url="#")
