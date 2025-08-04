@@ -180,6 +180,8 @@ with tab1:
                 st.image("https://upload.wikimedia.org/wikipedia/commons/6/6c/EEG_Brainwaves.svg", caption="EEG Signal", use_column_width=True)
 
 
+ # spacing before buttons
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
     col3, col4 = st.columns(2)
     with col3:
