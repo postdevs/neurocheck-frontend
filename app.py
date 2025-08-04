@@ -139,13 +139,7 @@ with tab1:
                 fatigue_labels = {"0": "Not Fatigued", "1": "Fatigued"}
                 display_result = fatigue_labels.get(result['fatigue_class'], result['fatigue_class'])
 
-                st.markdown(f"""
-                    <div class='result-card' style='text-align:center;'>
-                        <div style='font-size: 1.2rem; font-weight: 600;'>Fatigue Score</div>
-                        <div style='font-size: 3rem; font-weight: bold; color: #205375;'>{result['confidence']:.2f}</div>
-                        <div style='font-size: 1.2rem; margin-top: 0.5rem;'>Prediction: {display_result}</div>
-                    </div>
-                """, unsafe_allow_html=True)
+
             else:
                 st.error("❌ Could not get prediction.")
 
