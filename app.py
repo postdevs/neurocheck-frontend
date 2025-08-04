@@ -118,18 +118,17 @@ with tab1:
     with col1:
         # Display EEG upload instructions to user
         st.markdown("""
-            <div style='background-color: #f0f4f8; border: 2px dashed #205375; border-radius: 10px; padding: 1.5rem; text-align: center;'>
-                <h4 style='color:#205375;'>📂 Upload your EEG</h4>
-                <p>Accepted format: .csv | Max: 200MB</p>
-            </div>
-        """, unsafe_allow_html=True)
+        <div style='background-color: #f0f4f8; border: 2px dashed #205375; border-radius: 10px; padding: 1.5rem; text-align: center;'>
+            <h4 style='color:#205375; margin-bottom: 1rem;'>📂 Upload your EEG</h4>
+    """, unsafe_allow_html=True)
         #hide upload
-        uploaded_eeg_file = st.file_uploader("", type=["csv"])
+        uploaded_eeg_file = st.file_uploader(label="", type=["csv"], label_visibility="collapsed")
+
         st.markdown("</div>", unsafe_allow_html=True)
 
         if uploaded_eeg_file:
             # Display user EEG file upload status
-            st.write(f"✅ File uploaded: {uploaded_eeg_file.name}")
+            st.success(f"✅ File uploaded: {uploaded_eeg_file.name}")
 
             # Display EEG file processing status
             with st.spinner("Analyzing EEG data..."):
