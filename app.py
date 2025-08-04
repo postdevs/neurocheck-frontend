@@ -150,14 +150,12 @@ with tab1:
                 st.error("❌ Could not get prediction.")
 
         with col2:
-                    # Display EEG Signal using matplotlib (dynamic waveform)
+            # Display EEG Signal using matplotlib (dynamic waveform)
             if uploaded_eeg_file:
                 try:
                     df = pd.read_csv(uploaded_eeg_file)
-
-                    # Auto-detect time + first few channels
                     time_col = df.columns[0]
-                    signal_cols = df.columns[1:6]  # Show first 5 channels
+                    signal_cols = df.columns[1:6]
 
                     fig, ax = plt.subplots(figsize=(6, 4))
                     for col in signal_cols:
@@ -167,6 +165,20 @@ with tab1:
                     ax.set_ylabel("Amplitude")
                     ax.legend(loc="upper right")
                     st.pyplot(fig)
+
+                    # 🧠 Output result box after plot
+                    if result and "fatigue_class" in result:
+                        fatigue_labels = {"0": "Not Fatigued", "1": "Fatigued"}
+                        display_result = fatigue_labels.get(result['fatigue_class'], result['fatigue_class'])
+
+                        st.markdown(f"""
+                            <div class='result-card' style='text-align:center; margin-top: 1rem;'>
+                                <div style='font-size: 1.2rem; font-weight: 600;'>Fatigue Score</div>
+                                <div style='font-size: 3rem; font-weight: bold; color: #205375;'>{result['confidence']:.2f}</div>
+                                <div style='font-size: 1.2rem; margin-top: 0.5rem;'>Prediction: {display_result}</div>
+                            </div>
+                        """, unsafe_allow_html=True)
+
                 except Exception as e:
                     st.warning(f"Could not plot EEG dynamically. Showing fallback image.\n\nDetails: {e}")
                     st.image("https://upload.wikimedia.org/wikipedia/commons/6/6c/EEG_Brainwaves.svg", caption="EEG Signal", use_column_width=True)
