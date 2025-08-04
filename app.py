@@ -115,7 +115,6 @@ with tab1:
     st.subheader("EEG Fatigue Detector")
 
     col1, col2 = st.columns([2, 3])
-
     with col1:
         # Display EEG upload instructions to user
         st.markdown("""
@@ -124,11 +123,12 @@ with tab1:
                 <p>Accepted format: .csv | Max: 200MB</p>
             </div>
         """, unsafe_allow_html=True)
-        uploaded_eeg_file = st.file_uploader("", type=["csv"])
+        uploaded_eeg_file = st.file_uploader("📂 Upload an EEG", type=["csv"])
+
 
         if uploaded_eeg_file:
             # Display user EEG file upload status
-            st.success(f"✅ File uploaded: {uploaded_eeg_file.name}")
+            st.write(f"✅ File uploaded: {uploaded_eeg_file.name}")
 
             # Display EEG file processing status
             with st.spinner("Analyzing EEG data..."):
@@ -145,6 +145,12 @@ with tab1:
                 display_result = fatigue_labels.get(result['fatigue_class'], result['fatigue_class'])
 
                 #wraps prediction in styled card
+               # st.markdown(f"""
+                #    <div class='result-card'>
+               #         <h3>Prediction: {display_result}</h3>
+               #         <p>Confidence Level: {result['confidence']:.2f}</p>
+                #    </div>
+               # """, unsafe_allow_html=True)
                 st.markdown(f"""
                     <div class='result-card' style='text-align:center;'>
                         <div style='font-size: 1.2rem; font-weight: 600;'>Fatigue Score</div>
@@ -159,36 +165,38 @@ with tab1:
             else:
                 st.error("❌ Could not get prediction.")
 
-    with col2:
-        # Display EEG Signal using matplotlib (dynamic waveform)
-        if uploaded_eeg_file:
-            try:
-                df = pd.read_csv(uploaded_eeg_file)
+        with col2:
+                    # Display EEG Signal using matplotlib (dynamic waveform)
+            if uploaded_eeg_file:
+                try:
+                    df = pd.read_csv(uploaded_eeg_file)
 
-                # Auto-detect time + first few channels
-                time_col = df.columns[0]
-                signal_cols = df.columns[1:6]  # Show first 5 channels
+                    # Auto-detect time + first few channels
+                    time_col = df.columns[0]
+                    signal_cols = df.columns[1:6]  # Show first 5 channels
 
-                fig, ax = plt.subplots(figsize=(6, 4))
-                for col in signal_cols:
-                    ax.plot(df[time_col], df[col], label=col)
-                ax.set_title("EEG Signal")
-                ax.set_xlabel("Time")
-                ax.set_ylabel("Amplitude")
-                ax.legend(loc="upper right")
-                st.pyplot(fig)
-            except Exception as e:
-                st.warning(f"Could not plot EEG dynamically. Showing fallback image.\n\nDetails: {e}")
+                    fig, ax = plt.subplots(figsize=(6, 4))
+                    for col in signal_cols:
+                        ax.plot(df[time_col], df[col], label=col)
+                    ax.set_title("EEG Signal")
+                    ax.set_xlabel("Time")
+                    ax.set_ylabel("Amplitude")
+                    ax.legend(loc="upper right")
+                    st.pyplot(fig)
+                except Exception as e:
+                    st.warning(f"Could not plot EEG dynamically. Showing fallback image.\n\nDetails: {e}")
+                    st.image("https://upload.wikimedia.org/wikipedia/commons/6/6c/EEG_Brainwaves.svg", caption="EEG Signal", use_column_width=True)
+            else:
                 st.image("https://upload.wikimedia.org/wikipedia/commons/6/6c/EEG_Brainwaves.svg", caption="EEG Signal", use_column_width=True)
-        else:
-            st.image("https://upload.wikimedia.org/wikipedia/commons/6/6c/EEG_Brainwaves.svg", caption="EEG Signal", use_column_width=True)
 
-    # Footer buttons
+
+
     col3, col4 = st.columns(2)
     with col3:
         st.link_button("Explanation", url="#")
     with col4:
         st.link_button("Download Report", url="#")
+
 
 # === MRI Tab ===
 with tab2:
