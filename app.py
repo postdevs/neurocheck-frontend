@@ -123,8 +123,9 @@ with tab1:
                 <p>Accepted format: .csv | Max: 200MB</p>
             </div>
         """, unsafe_allow_html=True)
-        uploaded_eeg_file = st.file_uploader("📂 Upload an EEG", type=["csv"])
-
+        #hide upload
+        uploaded_eeg_file = st.file_uploader("", type=["csv"])
+        st.markdown("</div>", unsafe_allow_html=True)
 
         if uploaded_eeg_file:
             # Display user EEG file upload status
@@ -255,6 +256,6 @@ st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("""
 <hr style="margin-top: 2rem; margin-bottom: 1rem;">
 <div style="text-align: center; color: gray; font-size: 0.9rem;">
-    © 2025 NeuroCheck • Developed by Neurocheck
+    © 2025 NeuroCheck • Developed by NeuroCheck
 </div>
 """, unsafe_allow_html=True)
