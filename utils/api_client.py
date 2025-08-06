@@ -42,8 +42,8 @@ def call_eeg_api(uploaded_eeg_file, timeout: int = 120):
         raise ValueError("Uploaded EEG file must be a file-like object (e.g., from Streamlit uploader)")
 
     # Convert file for multipart/form-data upload
-    files = {
-        "eeg_file": (
+    eeg_files = {
+        "file": (
             uploaded_eeg_file.name,
             uploaded_eeg_file.getvalue(),
             uploaded_eeg_file.type or "application/octet-stream"
@@ -57,7 +57,7 @@ def call_eeg_api(uploaded_eeg_file, timeout: int = 120):
     try:
         response = requests.post(
             f"{BACKEND_API}/predict/eeg",
-            files=files,
+            files=eeg_files,
             headers=headers,
             timeout=timeout
             )
