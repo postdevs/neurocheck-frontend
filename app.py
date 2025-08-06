@@ -8,7 +8,7 @@ from utils.api_client import call_eeg_api, call_mri_api
 from PIL import Image
 import matplotlib.pyplot as plt
 import pandas as pd
-# import io  # Uncomment later if sending image bytes to backend
+import io
 
 #streamlit set up
 st.set_page_config(page_title="NeuroCheck", layout="centered", page_icon="🧠")
@@ -122,7 +122,7 @@ with tab1:
         """, unsafe_allow_html=True)
 
         # Place uploader *inside* styled div with label hidden
-        uploaded_eeg_file = st.file_uploader(label="", type=["csv"], label_visibility="collapsed")
+        uploaded_eeg_file = st.file_uploader(label="", type=["csv"], label_visibility="hidden")
 
         st.markdown("</div>", unsafe_allow_html=True)
 
