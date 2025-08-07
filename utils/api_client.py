@@ -45,7 +45,7 @@ def call_eeg_api(uploaded_eeg_file, timeout: int = 120):
     eeg_files = {
         "file": (
             uploaded_eeg_file.name,
-            uploaded_eeg_file.getvalue(),
+            uploaded_eeg_file,
             uploaded_eeg_file.type or "application/octet-stream"
         )
     }
@@ -89,21 +89,20 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
         raise ValueError("Image filefile must be a file-like object (e.g., from Streamlit uploader)")
 
     # Use getvalue() if available, else fallback to read()
-    uploaded_mri_file_contents = uploaded_mri_file.getvalue() if hasattr(uploaded_mri_file, "getvalue") else uploaded_mri_file.read()
+    #uploaded_mri_file_contents = uploaded_mri_file.getvalue() if hasattr(uploaded_mri_file, "getvalue") else uploaded_mri_file.read()
 
     # Convert file for multipart/form-data upload
     mri_files = {
         "file": (
-            uploaded_mri_file.name,                # Use original file object for name
-            uploaded_mri_file_contents,            # Use bytes content (no .getvalue() call)
-            uploaded_mri_file.type or "application/octet-stream"  # Use original file object for type
+            uploaded_mri_file.name,
+            uploaded_mri_file,
+            uploaded_mri_file.type or "image/jpeg"
         )
     }
 
     headers = {
         "Authorization": f"Bearer {st.secrets['GCLOUD_ACCESS_TOKEN']}"
     }
-
     try:
         response = requests.post(
             f"{BACKEND_API}/predict/alzheimers",
@@ -111,6 +110,7 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
             headers=headers,
             timeout=timeout
         )
+        print("MRI Response:", response.status_code, response.text)  # helpful debug
         response.raise_for_status()
         return response.json()
 
