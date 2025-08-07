@@ -45,8 +45,8 @@ def call_eeg_api(uploaded_eeg_file, timeout: int = 120):
     eeg_files = {
         "file": (
             uploaded_eeg_file.name,
-            uploaded_eeg_file,
-            uploaded_eeg_file.type or "application/octet-stream"
+            uploaded_eeg_file.getvalue(),
+            uploaded_eeg_file.type or "text/csv"
         )
     }
 
@@ -93,11 +93,11 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
 
     # Convert file for multipart/form-data upload
     mri_files = {
-        "file": (
-            uploaded_mri_file.name,
-            uploaded_mri_file,
-            uploaded_mri_file.type or "image/jpeg"
-        )
+    "file": (
+        uploaded_mri_file.name,
+        uploaded_mri_file.getvalue()
+        uploaded_mri_file.type or "image/jpeg"
+    )
     }
 
     headers = {
