@@ -131,7 +131,7 @@ with tab1:
             st.success(f"✅ File uploaded: {uploaded_eeg_file.name}")
 
             with st.spinner("Analyzing EEG data..."):
-                result = call_eeg_api(uploaded_eeg)
+                result = call_eeg_api(uploaded_eeg_file)
 
             if result.get("backend_status") == "offline":
                 st.warning("⚠️ Backend is offline, showing demo prediction instead.")
