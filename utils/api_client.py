@@ -95,7 +95,7 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
     mri_files = {
     "file": (
         uploaded_mri_file.name,
-        uploaded_mri_file.getvalue()
+        uploaded_mri_file.getvalue(),
         uploaded_mri_file.type or "image/jpeg"
     )
     }
