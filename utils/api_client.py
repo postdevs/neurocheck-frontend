@@ -94,9 +94,9 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
     # Convert file for multipart/form-data upload
     mri_files = {
         "file": (
-            uploaded_mri_file_contents.name,
-            uploaded_mri_file_contents.getvalue(),
-            uploaded_mri_file_contents.type or "application/octet-stream"
+            uploaded_mri_file.name,                # Use original file object for name
+            uploaded_mri_file_contents,            # Use bytes content (no .getvalue() call)
+            uploaded_mri_file.type or "application/octet-stream"  # Use original file object for type
         )
     }
 
@@ -110,7 +110,7 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
             files=mri_files,
             headers=headers,
             timeout=timeout
-            )
+        )
         response.raise_for_status()
         return response.json()
 
