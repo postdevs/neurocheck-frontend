@@ -114,6 +114,8 @@ tab1, tab2 = st.tabs(["EEG Fatigue Detector", "Alzheimer MRI Classifier"])
 with tab1:
     st.subheader("EEG Fatigue Detector")
 
+    # Initialize result variable
+    result = None
     col1, col2 = st.columns([2, 3])
     with col1:
         st.markdown("""
@@ -239,12 +241,12 @@ with tab2:
                 </div>
             """, unsafe_allow_html=True)
 
-            if "overlay" in result:
-                st.image(
-                    f"data:image/png;base64,{result['overlay']}",
-                    caption="Attention Map Overlay",
-                    use_column_width=True
-                )
+        if "overlay" in result:
+            st.image(
+                f"data:image/png;base64,{result['overlay']}",
+                caption="Attention Map Overlay",
+                use_column_width=True
+            )
 st.markdown("</div>", unsafe_allow_html=True)
 
 
