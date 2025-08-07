@@ -8,7 +8,7 @@ from utils.api_client import call_eeg_api, call_mri_api
 from PIL import Image
 import matplotlib.pyplot as plt
 import pandas as pd
-# import io  # Uncomment later if sending image bytes to backend
+import io
 
 #streamlit set up
 st.set_page_config(page_title="NeuroCheck", layout="centered", page_icon="🧠")
@@ -122,7 +122,7 @@ with tab1:
         """, unsafe_allow_html=True)
 
         # Place uploader *inside* styled div with label hidden
-        uploaded_eeg_file = st.file_uploader(label="", type=["csv"], label_visibility="collapsed")
+        uploaded_eeg_file = st.file_uploader(label="", type=["csv"], label_visibility="hidden")
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -160,7 +160,7 @@ with tab1:
                     ax.legend(loc="upper right")
                     st.pyplot(fig)
 
-                    # Output result box after plot
+                    # 🧠 Output result box after plot
                     if result and "fatigue_class" in result:
                         fatigue_labels = {"0": "Not Fatigued", "1": "Fatigued"}
                         display_result = fatigue_labels.get(result['fatigue_class'], result['fatigue_class'])
@@ -223,6 +223,10 @@ with tab2:
 
         # This additional section will upload and show the MRI Image, discplay prediction and confidence and display attention map.
         with st.spinner("Analyzing MRI..."):
+            st.write(f"Debug - Type: {type(uploaded_mri_file)}")
+            st.write(f"Debug - Has name: {hasattr(uploaded_mri_file, 'name')}")
+            if hasattr(uploaded_mri_file, 'name'):
+                st.write(f"Debug - Name: {uploaded_mri_file.name}")
             result = call_mri_api(uploaded_mri_file)
 
         if "error" in result:
