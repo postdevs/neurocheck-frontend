@@ -89,13 +89,13 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
         raise ValueError("Image filefile must be a file-like object (e.g., from Streamlit uploader)")
 
     # Use getvalue() if available, else fallback to read()
-    #uploaded_mri_file_contents = uploaded_mri_file.getvalue() if hasattr(uploaded_mri_file, "getvalue") else uploaded_mri_file.read()
+    uploaded_mri_file_contents = uploaded_mri_file.getvalue() if hasattr(uploaded_mri_file, "getvalue") else uploaded_mri_file.read()
 
     # Convert file for multipart/form-data upload
     mri_files = {
     "file": (
         uploaded_mri_file.name,
-        uploaded_mri_file.getvalue(),
+        uploaded_mri_file_contents,
         uploaded_mri_file.type or "image/jpeg"
     )
     }
