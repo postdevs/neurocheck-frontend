@@ -74,28 +74,28 @@ def call_eeg_api(uploaded_eeg_file, timeout: int = 120):
                 if isinstance(e, requests.exceptions.HTTPError) else None
         }
 
-def call_mri_api(uploaded_image_file, timeout: int = 120):
+def call_mri_api(uploaded_mri_file, timeout: int = 120):
     """
     Send an MRI image file to the FastAPI backend for Alzheimer classification.
 
     Args:
-        uploaded_image_file: File-like object (from Streamlit uploader) with .name, .type, and readable content
+        uploaded_mri_file: File-like object (from Streamlit uploader) with .name, .type, and readable content
         timeout (int): Request timeout in seconds (default: 120)
 
     Returns:
         dict: Backend JSON response or error dict.
     """
-    if not hasattr(uploaded_image_file, "read") and not hasattr(uploaded_image_file, "getvalue"):
+    if not hasattr(uploaded_mri_file, "read") and not hasattr(uploaded_mri_file, "getvalue"):
         raise ValueError("Image filefile must be a file-like object (e.g., from Streamlit uploader)")
 
     # Use getvalue() if available, else fallback to read()
-    file_content = uploaded_image_file.getvalue() if hasattr(uploaded_image_file, "getvalue") else uploaded_image_file.read()
+    file_content = uploaded_mri_file.getvalue() if hasattr(uploaded_mri_file, "getvalue") else uploaded_mri_file.read()
 
-    files = {
+    mri_files = {
         "file": (
-            uploaded_image_file.name,
+            uploaded_mri_file.name,
             file_content,
-            uploaded_image_file.type or "application/octet-stream"
+            uploaded_mri_file.type or "application/octet-stream"
         )
     }
 
@@ -106,7 +106,7 @@ def call_mri_api(uploaded_image_file, timeout: int = 120):
     try:
         response = requests.post(
             f"{BACKEND_API}/predict/alzheimers", # want to add correct URL
-            files=files,
+            files=mri_files,
             headers=headers,
             timeout=timeout
         )
