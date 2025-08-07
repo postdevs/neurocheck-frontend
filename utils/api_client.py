@@ -39,14 +39,13 @@ def call_eeg_api(uploaded_eeg_file, timeout: int = 120):
 
     # Validate uploaded file
     if not hasattr(uploaded_eeg_file, "getvalue"):
-        raise ValueError("Uploaded EEG file must be a file-like object (e.g., from Streamlit uploader)")
-
+        raise ValueError("uploaded_file must be a file-like object (e.g., from Streamlit uploader)")
     # Convert file for multipart/form-data upload
     eeg_files = {
-        "file": (
+        "eeg_file": (
             uploaded_eeg_file.name,
             uploaded_eeg_file.getvalue(),
-            uploaded_eeg_file.type or "text/csv"
+            uploaded_eeg_file.type or "application/octet-stream"
         )
     }
 
@@ -93,10 +92,10 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
 
     # Convert file for multipart/form-data upload
     mri_files = {
-    "file": (
+    "alz_file": (
         uploaded_mri_file.name,
         uploaded_mri_file_contents,
-        uploaded_mri_file.type or "image/jpeg"
+        uploaded_mri_file.type or "application/octet-stream"
     )
     }
 
