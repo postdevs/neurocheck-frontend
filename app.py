@@ -149,22 +149,26 @@ with tab1:
                 try:
                     df = pd.read_csv(uploaded_eeg_file)
                     time_col = df.columns[0]
-                    signal_cols = df.columns[1:6]
 
+                    # Ensure time is numeric
+                    df[time_col] = pd.to_numeric(df[time_col], errors='coerce')
+
+                    # Filter only numeric signal columns and exclude 'time'
+                    signal_cols = [col for col in df.columns if col != time_col and pd.api.types.is_numeric_dtype(df[col])]
+
+                    # Drop NaNs
+                    df.dropna(subset=[time_col] + signal_cols, inplace=True)
+
+                    # Plot
                     fig, ax = plt.subplots(figsize=(6, 4))
-                    N = 1000  # Limit to first 1000 samples for clarity
-
-                    for col in signal_cols:
-                        ax.plot(df[time_col][:N], df[col][:N], label=col, linewidth=1.2, alpha=0.9)
-
+                    for col in signal_cols[:5]:  # Plot just the first 5 signals
+                        ax.plot(df[time_col], df[col], label=col)
                     ax.set_title("EEG Signal")
                     ax.set_xlabel("Time")
                     ax.set_ylabel("Amplitude")
                     ax.legend(loc="upper right")
-                    ax.grid(True, linestyle='--', alpha=0.5)
-                    fig.tight_layout()
-
                     st.pyplot(fig)
+
 
                     # Output result box after plot
                     if result and "fatigue_class" in result:
