@@ -8,7 +8,7 @@ from utils.api_client import call_eeg_api, call_mri_api
 from PIL import Image
 import matplotlib.pyplot as plt
 import pandas as pd
-import io
+# import io  # Uncomment later if sending image bytes to backend
 
 #streamlit set up
 st.set_page_config(page_title="NeuroCheck", layout="centered", page_icon="🧠")
@@ -122,7 +122,7 @@ with tab1:
         """, unsafe_allow_html=True)
 
         # Place uploader *inside* styled div with label hidden
-        uploaded_eeg_file = st.file_uploader(label="", type=["csv"], label_visibility="hidden")
+        uploaded_eeg_file = st.file_uploader(label="", type=["csv"], label_visibility="collapsed")
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -148,27 +148,17 @@ with tab1:
             if uploaded_eeg_file:
                 try:
                     df = pd.read_csv(uploaded_eeg_file)
-                    time_col = df.columns[0:1]
+                    time_col = df.columns[0]
+                    signal_cols = df.columns[1:6]
 
-                    # Ensure time is numeric
-                    df[time_col] = pd.to_numeric(df[time_col], errors='coerce')
-
-                    # Filter only numeric signal columns and exclude 'time'
-                    signal_cols = [col for col in df.columns if col != time_col and pd.api.types.is_numeric_dtype(df[col])]
-
-                    # Drop NaNs
-                    df.dropna(subset=[time_col] + signal_cols, inplace=True)
-
-                    # Plot
                     fig, ax = plt.subplots(figsize=(6, 4))
-                    for col in signal_cols[:5]:  # Plot just the first 5 signals
+                    for col in signal_cols:
                         ax.plot(df[time_col], df[col], label=col)
                     ax.set_title("EEG Signal")
                     ax.set_xlabel("Time")
                     ax.set_ylabel("Amplitude")
                     ax.legend(loc="upper right")
                     st.pyplot(fig)
-
 
                     # Output result box after plot
                     if result and "fatigue_class" in result:
