@@ -152,15 +152,21 @@ with tab1:
                     signal_cols = df.columns[1:6]
 
                     fig, ax = plt.subplots(figsize=(6, 4))
+                    N = 1000  # Limit to first 1000 samples for clarity
+
                     for col in signal_cols:
-                        ax.plot(df[time_col], df[col], label=col)
+                        ax.plot(df[time_col][:N], df[col][:N], label=col, linewidth=1.2, alpha=0.9)
+
                     ax.set_title("EEG Signal")
                     ax.set_xlabel("Time")
                     ax.set_ylabel("Amplitude")
                     ax.legend(loc="upper right")
+                    ax.grid(True, linestyle='--', alpha=0.5)
+                    fig.tight_layout()
+
                     st.pyplot(fig)
 
-                    # 🧠 Output result box after plot
+                    # Output result box after plot
                     if result and "fatigue_class" in result:
                         fatigue_labels = {"0": "Not Fatigued", "1": "Fatigued"}
                         display_result = fatigue_labels.get(result['fatigue_class'], result['fatigue_class'])
