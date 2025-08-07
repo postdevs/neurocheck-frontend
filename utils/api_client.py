@@ -3,7 +3,7 @@ This module provides a utility function to send EEG and MRI data files to a Fast
 This includes functions to:
 - Check backend health
 - Send EEG CSV files for fatigue prediction
-- Send MRI image files files for Alzheimer classification.
+- Send MRI image files for Alzheimer classification.
 
 All requests include authorization headers from Streamlit secrets.
 """
@@ -89,13 +89,14 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
         raise ValueError("Image filefile must be a file-like object (e.g., from Streamlit uploader)")
 
     # Use getvalue() if available, else fallback to read()
-    file_content = uploaded_mri_file.getvalue() if hasattr(uploaded_mri_file, "getvalue") else uploaded_mri_file.read()
+    uploaded_mri_file_contents = uploaded_mri_file.getvalue() if hasattr(uploaded_mri_file, "getvalue") else uploaded_mri_file.read()
 
+    # Convert file for multipart/form-data upload
     mri_files = {
         "file": (
-            uploaded_mri_file.name,
-            file_content,
-            uploaded_mri_file.type or "application/octet-stream"
+            uploaded_mri_file_contents.name,
+            uploaded_mri_file_contents.getvalue(),
+            uploaded_mri_file_contents.type or "application/octet-stream"
         )
     }
 
@@ -105,11 +106,11 @@ def call_mri_api(uploaded_mri_file, timeout: int = 120):
 
     try:
         response = requests.post(
-            f"{BACKEND_API}/predict/alzheimers", # want to add correct URL
+            f"{BACKEND_API}/predict/alzheimers",
             files=mri_files,
             headers=headers,
             timeout=timeout
-        )
+            )
         response.raise_for_status()
         return response.json()
 
