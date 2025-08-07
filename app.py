@@ -148,7 +148,7 @@ with tab1:
             if uploaded_eeg_file:
                 try:
                     df = pd.read_csv(uploaded_eeg_file)
-                    time_col = df.columns[0]
+                    time_col = df.columns[1]
 
                     # Ensure time is numeric
                     df[time_col] = pd.to_numeric(df[time_col], errors='coerce')
