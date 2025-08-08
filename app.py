@@ -8,10 +8,18 @@ from utils.api_client import call_eeg_api, call_mri_api
 from PIL import Image
 import matplotlib.pyplot as plt
 import pandas as pd
+import base64
+
+def img_to_base64(path: str) -> str:
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode("utf-8")
+
+LOGO_URI = f"data:image/png;base64,{img_to_base64('assets/Neurocheck_logo_w.png')}"
+ICON_URI = f"data:image/png;base64,{img_to_base64('assets/Neurocheck_logo.png')}"
 # import io  # Uncomment later if sending image bytes to backend
 
 #streamlit set up
-st.set_page_config(page_title="NeuroCheck", layout="centered", page_icon="🧠")
+st.set_page_config(page_title="NeuroCheck", layout="centered", page_icon="assets/Neurocheck_logo.png")
 
 #layyout, colours, fonts
 def inject_css():
@@ -87,13 +95,16 @@ def inject_css():
 inject_css()  # Call it at the top of main script
 # Set up the Streamlit app with two tabs
 def render_navbar():
-    st.markdown("""
-        <div style="background-color:#0B2545; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; color: white; border-radius: 8px;">
-            <div style="font-size: 1.5rem; font-weight: bold;">🧠 NeuroCheck</div>
-            <div style="font-size: 1rem;">
-                <a href="#" style="margin-right: 1.5rem; color: white; text-decoration: none;">EEG</a>
-                <a href="#" style="margin-right: 1.5rem; color: white; text-decoration: none;">Alzheimer's</a>
-                <a href="#" style="color: white; text-decoration: none;">Voice</a>
+    st.markdown(f"""
+        <div style="background-color:#0B2545; padding: 1rem 2rem; display:flex; justify-content:space-between; align-items:center; color:white; border-radius:8px;">
+            <div style="display:flex; align-items:center; gap:.6rem;">
+                <img src="{LOGO_URI}" style="height:28px;" alt="NeuroCheck logo" />
+                <span style="font-size:1.1rem; font-weight:700;">NeuroCheck</span>
+            </div>
+            <div style="font-size:1rem;">
+                <a href="#" style="margin-left:1.5rem; color:white; text-decoration:none;">EEG</a>
+                <a href="#" style="margin-left:1.5rem; color:white; text-decoration:none;">Alzheimer's</a>
+                <a href="#" style="margin-left:1.5rem; color:white; text-decoration:none;">Voice</a>
             </div>
         </div>
         <br>
@@ -103,7 +114,11 @@ render_navbar()
 st.markdown("""
     <div style='background-color: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);'>
 """, unsafe_allow_html=True)
-
+st.markdown(f"""
+    <div style="display:flex; justify-content:center; margin: 0 0 1rem 0;">
+        <img src="{LOGO_URI}" style="max-width:220px; width:40%; height:auto;" alt="NeuroCheck logo"/>
+    </div>
+""", unsafe_allow_html=True)
 st.markdown("## AI-Powered Neurological Screening")
 st.markdown("Upload your neurological data and get rapid assessment results.")
 
@@ -262,9 +277,11 @@ with tab2:
 st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<br><br>", unsafe_allow_html=True)
 
-st.markdown("""
-<hr style="margin-top: 2rem; margin-bottom: 1rem;">
-<div style="text-align: center; color: gray; font-size: 0.9rem;">
-    © 2025 NeuroCheck • Developed by NeuroCheck
-</div>
+st.markdown(f"""
+    <div style="margin-top:2.5rem; text-align:center;">
+        <img src="{LOGO_URI}" style="max-width:200px; height:auto; opacity:0.9;"/>
+        <div style="margin-top:.75rem; color:gray; font-size:0.9rem;">
+            © 2025 NeuroCheck • Developed by NeuroCheck
+        </div>
+    </div>
 """, unsafe_allow_html=True)
