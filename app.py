@@ -98,7 +98,7 @@ def render_navbar():
     st.markdown(f"""
         <div style="background-color:#0B2545; padding: 1rem 2rem; display:flex; justify-content:space-between; align-items:center; color:white; border-radius:8px;">
             <div style="display:flex; align-items:center; gap:.6rem;">
-                <img src="{LOGO_URI}" style="height:28px;" alt="NeuroCheck logo" />
+                <img src="{ICON_URI}" style="height:28px;" alt="NeuroCheck logo" />
                 <span style="font-size:1.1rem; font-weight:700;">NeuroCheck</span>
             </div>
             <div style="font-size:1rem;">
@@ -116,7 +116,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown(f"""
     <div style="display:flex; justify-content:center; margin: 0 0 1rem 0;">
-        <img src="{LOGO_URI}" style="max-width:220px; width:40%; height:auto;" alt="NeuroCheck logo"/>
+        <img src="{ICON_URI}" style="max-width:220px; width:40%; height:auto;" alt="NeuroCheck logo"/>
     </div>
 """, unsafe_allow_html=True)
 st.markdown("## AI-Powered Neurological Screening")
