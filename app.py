@@ -8,7 +8,7 @@ from utils.api_client import call_eeg_api, call_mri_api
 from PIL import Image
 import matplotlib.pyplot as plt
 import pandas as pd
-# import io  # Uncomment later if sending image bytes to backend
+import io
 
 #streamlit set up
 st.set_page_config(page_title="NeuroCheck", layout="centered", page_icon="🧠")
@@ -114,6 +114,8 @@ tab1, tab2 = st.tabs(["EEG Fatigue Detector", "Alzheimer MRI Classifier"])
 with tab1:
     st.subheader("EEG Fatigue Detector")
 
+    # Initialize result variable
+    result = None
     col1, col2 = st.columns([2, 3])
     with col1:
         st.markdown("""
@@ -123,7 +125,6 @@ with tab1:
 
         # Place uploader *inside* styled div with label hidden
         uploaded_eeg_file = st.file_uploader(label="", type=["csv"], label_visibility="collapsed")
-
         st.markdown("</div>", unsafe_allow_html=True)
 
         if uploaded_eeg_file:
@@ -160,7 +161,7 @@ with tab1:
                     ax.legend(loc="upper right")
                     st.pyplot(fig)
 
-                    # Output result box after plot
+                    # 🧠 Output result box after plot
                     if result and "fatigue_class" in result:
                         fatigue_labels = {"0": "Not Fatigued", "1": "Fatigued"}
                         display_result = fatigue_labels.get(result['fatigue_class'], result['fatigue_class'])
@@ -248,12 +249,12 @@ with tab2:
                 </div>
             """, unsafe_allow_html=True)
 
-            if "overlay" in result:
-                st.image(
-                    f"data:image/png;base64,{result['overlay']}",
-                    caption="Attention Map Overlay",
-                    use_column_width=True
-                )
+        if "overlay" in result:
+            st.image(
+                f"data:image/png;base64,{result['overlay']}",
+                caption="Attention Map Overlay",
+                use_column_width=True
+            )
 st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<br><br>", unsafe_allow_html=True)
 

@@ -3,7 +3,7 @@ This module provides a utility function to send EEG and MRI data files to a Fast
 This includes functions to:
 - Check backend health
 - Send EEG CSV files for fatigue prediction
-- Send MRI image files files for Alzheimer classification.
+- Send MRI image files for Alzheimer classification.
 
 All requests include authorization headers from Streamlit secrets.
 """
@@ -39,11 +39,10 @@ def call_eeg_api(uploaded_eeg_file, timeout: int = 120):
 
     # Validate uploaded file
     if not hasattr(uploaded_eeg_file, "getvalue"):
-        raise ValueError("Uploaded EEG file must be a file-like object (e.g., from Streamlit uploader)")
-
+        raise ValueError("uploaded_file must be a file-like object (e.g., from Streamlit uploader)")
     # Convert file for multipart/form-data upload
     eeg_files = {
-        "file": (
+        "eeg_file": (
             uploaded_eeg_file.name,
             uploaded_eeg_file.getvalue(),
             uploaded_eeg_file.type or "application/octet-stream"
@@ -74,42 +73,43 @@ def call_eeg_api(uploaded_eeg_file, timeout: int = 120):
                 if isinstance(e, requests.exceptions.HTTPError) else None
         }
 
-def call_mri_api(uploaded_image_file, timeout: int = 120):
+def call_mri_api(uploaded_mri_file, timeout: int = 120):
     """
     Send an MRI image file to the FastAPI backend for Alzheimer classification.
 
     Args:
-        uploaded_image_file: File-like object (from Streamlit uploader) with .name, .type, and readable content
+        uploaded_mri_file: File-like object (from Streamlit uploader) with .name, .type, and readable content
         timeout (int): Request timeout in seconds (default: 120)
 
     Returns:
         dict: Backend JSON response or error dict.
     """
-    if not hasattr(uploaded_image_file, "read") and not hasattr(uploaded_image_file, "getvalue"):
+    if not hasattr(uploaded_mri_file, "read") and not hasattr(uploaded_mri_file, "getvalue"):
         raise ValueError("Image filefile must be a file-like object (e.g., from Streamlit uploader)")
 
     # Use getvalue() if available, else fallback to read()
-    file_content = uploaded_image_file.getvalue() if hasattr(uploaded_image_file, "getvalue") else uploaded_image_file.read()
+    uploaded_mri_file_contents = uploaded_mri_file.getvalue() if hasattr(uploaded_mri_file, "getvalue") else uploaded_mri_file.read()
 
-    files = {
-        "file": (
-            uploaded_image_file.name,
-            file_content,
-            uploaded_image_file.type or "application/octet-stream"
-        )
+    # Convert file for multipart/form-data upload
+    mri_files = {
+    "alz_file": (
+        uploaded_mri_file.name,
+        uploaded_mri_file_contents,
+        uploaded_mri_file.type or "application/octet-stream"
+    )
     }
 
     headers = {
         "Authorization": f"Bearer {st.secrets['GCLOUD_ACCESS_TOKEN']}"
     }
-
     try:
         response = requests.post(
-            f"{BACKEND_API}/predict/alzheimers", # want to add correct URL
-            files=files,
+            f"{BACKEND_API}/predict/alzheimers",
+            files=mri_files,
             headers=headers,
             timeout=timeout
         )
+        print("MRI Response:", response.status_code, response.text)  # helpful debug
         response.raise_for_status()
         return response.json()
 
