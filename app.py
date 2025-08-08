@@ -114,11 +114,11 @@ render_navbar()
 st.markdown("""
     <div style='background-color: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);'>
 """, unsafe_allow_html=True)
-st.markdown(f"""
-    <div style="display:flex; justify-content:center; margin: 0 0 1rem 0;">
-        <img src="{ICON_URI}" style="max-width:220px; width:40%; height:auto;" alt="NeuroCheck logo"/>
-    </div>
-""", unsafe_allow_html=True)
+#st.markdown(f"""
+#    <div style="display:flex; justify-content:center; margin: 0 0 1rem 0;">
+ #       <img src="{ICON_URI}" style="max-width:220px; width:40%; height:auto;" alt="NeuroCheck logo"/>
+ #   </div>
+#""", unsafe_allow_html=True)
 st.markdown("## AI-Powered Neurological Screening")
 st.markdown("Upload your neurological data and get rapid assessment results.")
 
