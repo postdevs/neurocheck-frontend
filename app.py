@@ -195,26 +195,39 @@ with tab2:
     st.subheader("Alzheimer MRI Classifier")
     # st.markdown("Upload an MRI brain image or use our sample to get a classification.")
 
+    # two-column layout like EEG
+    m_col1, m_col2 = st.columns([2, 3])
+
+    with m_col1:
+        # styled uploader box (real uploader inside)
+        st.markdown("""
+            <div style='background-color: #f0f4f8; border: 2px dashed #205375; border-radius: 10px; padding: 1.5rem; text-align: center;'>
+                <h4 style='color:#205375; margin-bottom: 1rem;'>🧠 Upload an MRI Image</h4>
+                <p style='font-size: 0.9rem; color: #333;'>Accepted formats: JPG, JPEG, PNG · Max: 200MB</p>
+            </div>
+        """, unsafe_allow_html=True)
     # Display EEG upload instructions to user
-    uploaded_mri_file = st.file_uploader("📂 Upload an MRI Image", type=["jpg", "jpeg", "png"])
+        uploaded_mri_file = st.file_uploader("📂 Upload an MRI Image", type=["jpg", "jpeg", "png"], label_visibility='collapsed')
 
-    # # Button to load sample image
-    # use_sample = st.button("Use Sample Image")
+        # # Button to load sample image
+        # use_sample = st.button("Use Sample Image")
 
-    mri_image_to_classify = None
+        mri_image_to_classify = None
 
-    if uploaded_mri_file:
-        # Display user MRI file upload status
-        mri_image_to_classify = Image.open(uploaded_mri_file)
-        st.success(f"✅ File uploaded: {uploaded_mri_file.name}")
-    # elif use_sample:
-    #     sample_path = "sample_mri.jpg"  # You will add this file locally or via URL
-    #     mri_image_to_classify = Image.open(sample_path)
-    #     st.info("📁 Using sample image.")
+        if uploaded_mri_file:
+            # Display user MRI file upload status
+            mri_image_to_classify = Image.open(uploaded_mri_file)
+            st.success(f"✅ File uploaded: {uploaded_mri_file.name}")
+        # elif use_sample:
+        #     sample_path = "sample_mri.jpg"  # You will add this file locally or via URL
+        #     mri_image_to_classify = Image.open(sample_path)
+        #     st.info("📁 Using sample image.")
+    with m_col2:
+        if uploaded_mri_file:
+            # show input MRI
+            mri_image_to_classify = Image.open(uploaded_mri_file)
+            st.image(mri_image_to_classify, caption="MRI Input", use_column_width=True)
 
-    if mri_image_to_classify:
-        # Display the uploaded or sample MRI image to the user
-        st.image(mri_image_to_classify, caption="MRI Input", use_column_width=True)
     # TODO: Integrate backend call to Hugging Face model via FastAPI
     # This block will handle:
     #   - Sending the image to the /predict/alz endpoint
@@ -242,7 +255,7 @@ with tab2:
                     use_column_width=True
                 )
 st.markdown("</div>", unsafe_allow_html=True)
-
+st.markdown("<br><br>", unsafe_allow_html=True)
 
 st.markdown("""
 <hr style="margin-top: 2rem; margin-bottom: 1rem;">
