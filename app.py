@@ -237,28 +237,28 @@ with tab2:
     #   - Displaying the predicted label and confidence score
 
         # This additional section will upload and show the MRI Image, discplay prediction and confidence and display attention map.
-        with st.spinner("Analyzing MRI..."):
-            result = call_mri_api(uploaded_mri_file)
+            with st.spinner("Analyzing MRI..."):
+                result = call_mri_api(uploaded_mri_file)
 
-        if "error" in result:
-            st.error(f"❌ Error: {result['error']}")
+            if "error" in result:
+                st.error(f"❌ Error: {result['error']}")
+            else:
+                st.markdown(f"""
+                    <div class='result-card'>
+                        <h3>Prediction: {result['prediction']}</h3>
+                        <p>Confidence: {result['confidence']:.2f}</p>
+                    </div>
+                """, unsafe_allow_html=True)
+
+                if "overlay" in result:
+                    st.image(
+                        f"data:image/png;base64,{result['overlay']}",
+                        caption="Attention Map Overlay",
+                        use_column_width=True
+                    )
+
         else:
-            st.markdown(f"""
-                <div class='result-card'>
-                    <h3>Prediction: {result['prediction']}</h3>
-                    <p>Confidence: {result['confidence']:.2f}</p>
-                </div>
-            """, unsafe_allow_html=True)
-
-            if "overlay" in result:
-                st.image(
-                    f"data:image/png;base64,{result['overlay']}",
-                    caption="Attention Map Overlay",
-                    use_column_width=True
-                )
-
-        else:
-    st.info("Upload an MRI image to see predictions →")
+            st.info("Upload an MRI image to see predictions →")
 st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("<br><br>", unsafe_allow_html=True)
 
